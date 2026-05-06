@@ -108,6 +108,6 @@ export function getTenantList(isToken: boolean): AxiosPromise<TenantInfo> {
     headers: {
       isToken: isToken
     },
-    method: 'get'
+    method: 'post'
   });
 }

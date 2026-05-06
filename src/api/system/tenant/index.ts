@@ -6,7 +6,7 @@ import { AxiosPromise } from 'axios';
 export function listTenant(query: TenantQuery): AxiosPromise<TenantVO[]> {
   return request({
     url: '/system/tenant/list',
-    method: 'get',
+    method: 'post',
     params: query
   });
 }

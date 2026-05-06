@@ -1,11 +1,11 @@
 <template>
   <div class="p-4">
-    <!-- Í³¼Æ¿¨Æ¬ -->
+    <!-- ç»Ÿè®¡å¡ç‰‡ -->
     <el-row :gutter="20" class="mb-4">
       <el-col :span="4">
         <el-card shadow="hover" class="stat-mini-card">
           <div class="stat-mini">
-            <span class="label">Í¶µİ×ÜÊı</span>
+            <span class="label">æŠ•é€’æ€»æ•°</span>
             <span class="value">{{ statistics.totalCount || 0 }}</span>
           </div>
         </el-card>
@@ -13,7 +13,7 @@
       <el-col :span="4">
         <el-card shadow="hover" class="stat-mini-card">
           <div class="stat-mini">
-            <span class="label">ÒÑÍ¶µİ</span>
+            <span class="label">å·²æŠ•é€’</span>
             <span class="value">{{ statistics.appliedCount || 0 }}</span>
           </div>
         </el-card>
@@ -21,7 +21,7 @@
       <el-col :span="4">
         <el-card shadow="hover" class="stat-mini-card primary">
           <div class="stat-mini">
-            <span class="label">ÃæÊÔÑûÇë</span>
+            <span class="label">é¢è¯•é‚€è¯·</span>
             <span class="value primary">{{ statistics.interviewCount || 0 }}</span>
           </div>
         </el-card>
@@ -29,7 +29,7 @@
       <el-col :span="4">
         <el-card shadow="hover" class="stat-mini-card success">
           <div class="stat-mini">
-            <span class="label">ÒÑÂ¼ÓÃ</span>
+            <span class="label">å·²å½•ç”¨</span>
             <span class="value success">{{ statistics.hiredCount || 0 }}</span>
           </div>
         </el-card>
@@ -37,7 +37,7 @@
       <el-col :span="4">
         <el-card shadow="hover" class="stat-mini-card danger">
           <div class="stat-mini">
-            <span class="label">ÒÑ¾Ü¾ø</span>
+            <span class="label">å·²æ‹’ç»</span>
             <span class="value danger">{{ statistics.rejectedCount || 0 }}</span>
           </div>
         </el-card>
@@ -45,50 +45,50 @@
       <el-col :span="4">
         <el-card shadow="hover" class="stat-mini-card warning">
           <div class="stat-mini">
-            <span class="label">Î´¶Á</span>
+            <span class="label">æœªè¯»</span>
             <span class="value warning">{{ statistics.unreadCount || 0 }}</span>
           </div>
         </el-card>
       </el-col>
     </el-row>
 
-    <!-- ËÑË÷À¸ -->
+    <!-- æœç´¢æ  -->
     <el-card shadow="hover" class="mb-4">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="¸ÚÎ»Ãû³Æ" prop="jobName">
-          <el-input v-model="queryParams.jobName" placeholder="ÇëÊäÈë¸ÚÎ»Ãû³Æ" clearable @keyup.enter="handleQuery" />
+        <el-form-item label="å²—ä½åç§°" prop="jobName">
+          <el-input v-model="queryParams.jobName" placeholder="è¯·è¾“å…¥å²—ä½åç§°" clearable @keyup.enter="handleQuery" />
         </el-form-item>
-        <el-form-item label="ÇóÖ°Õß" prop="userName">
-          <el-input v-model="queryParams.userName" placeholder="ÇëÊäÈëÇóÖ°Õß" clearable @keyup.enter="handleQuery" />
+        <el-form-item label="æ±‚èŒè€…" prop="userName">
+          <el-input v-model="queryParams.userName" placeholder="è¯·è¾“å…¥æ±‚èŒè€…" clearable @keyup.enter="handleQuery" />
         </el-form-item>
-        <el-form-item label="×´Ì¬" prop="status">
-          <el-select v-model="queryParams.status" placeholder="È«²¿" clearable style="width: 120px">
-            <el-option label="ÒÑÍ¶µİ" value="0" />
-            <el-option label="ÃæÊÔÑûÇë" value="1" />
-            <el-option label="ÒÑÂ¼ÓÃ" value="2" />
-            <el-option label="ÒÑ¾Ü¾ø" value="3" />
+        <el-form-item label="çŠ¶æ€" prop="status">
+          <el-select v-model="queryParams.status" placeholder="å…¨éƒ¨" clearable style="width: 120px">
+            <el-option label="å·²æŠ•é€’" value="0" />
+            <el-option label="é¢è¯•é‚€è¯·" value="1" />
+            <el-option label="å·²å½•ç”¨" value="2" />
+            <el-option label="å·²æ‹’ç»" value="3" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="handleQuery">ËÑË÷</el-button>
-          <el-button icon="Refresh" @click="resetQuery">ÖØÖÃ</el-button>
+          <el-button type="primary" icon="Search" @click="handleQuery">æœç´¢</el-button>
+          <el-button icon="Refresh" @click="resetQuery">é‡ç½®</el-button>
         </el-form-item>
       </el-form>
     </el-card>
 
-    <!-- Êı¾İ±í¸ñ -->
+    <!-- æ•°æ®è¡¨æ ¼ -->
     <el-card shadow="hover">
       <template #header>
         <el-row :gutter="10">
           <el-col :span="1.5">
-            <el-button type="primary" plain icon="Refresh" @click="loadData">Ë¢ĞÂ</el-button>
+            <el-button type="primary" plain icon="Refresh" @click="loadData">åˆ·æ–°</el-button>
           </el-col>
         </el-row>
       </template>
 
       <el-table v-loading="loading" :data="tableData" border stripe>
-        <el-table-column label="Í¶µİID" prop="applyId" width="80" align="center" />
-        <el-table-column label="ÇóÖ°ÕßĞÅÏ¢" min-width="150">
+        <el-table-column label="æŠ•é€’ID" prop="applyId" width="80" align="center" />
+        <el-table-column label="æ±‚èŒè€…ä¿¡æ¯" min-width="150">
           <template #default="{ row }">
             <div class="user-info">
               <el-avatar v-if="row.avatar" :src="row.avatar" :size="36" />
@@ -96,13 +96,13 @@
                 {{ row.userName?.charAt(0) || 'U' }}
               </el-avatar>
               <div class="user-detail">
-                <div class="name">{{ row.userName || 'Î´ÖªÓÃ»§' }}</div>
+                <div class="name">{{ row.userName || 'æœªçŸ¥ç”¨æˆ·' }}</div>
                 <div class="phone">{{ row.phonenumber || '' }}</div>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="¸ÚÎ»ĞÅÏ¢" min-width="200">
+        <el-table-column label="å²—ä½ä¿¡æ¯" min-width="200">
           <template #default="{ row }">
             <div class="job-info">
               <div class="job-name">{{ row.jobName || '-' }}</div>
@@ -110,27 +110,27 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="ÆóÒµ" prop="companyName" min-width="120" />
-        <el-table-column label="Í¶µİÊ±¼ä" prop="applyTime" width="160" align="center" />
-        <el-table-column label="×´Ì¬" width="100" align="center">
+        <el-table-column label="ä¼ä¸š" prop="companyName" min-width="120" />
+        <el-table-column label="æŠ•é€’æ—¶é—´" prop="applyTime" width="160" align="center" />
+        <el-table-column label="çŠ¶æ€" width="100" align="center">
           <template #default="{ row }">
             <el-tag v-if="row.status === '0'" type="info">
-              {{ row.isRead === '0' ? 'ĞÂÍ¶µİ' : 'ÒÑÍ¶µİ' }}
+              {{ row.isRead === '0' ? 'æ–°æŠ•é€’' : 'å·²æŠ•é€’' }}
             </el-tag>
-            <el-tag v-else-if="row.status === '1'" type="primary">ÃæÊÔÑûÇë</el-tag>
-            <el-tag v-else-if="row.status === '2'" type="success">ÒÑÂ¼ÓÃ</el-tag>
-            <el-tag v-else type="danger">ÒÑ¾Ü¾ø</el-tag>
+            <el-tag v-else-if="row.status === '1'" type="primary">é¢è¯•é‚€è¯·</el-tag>
+            <el-tag v-else-if="row.status === '2'" type="success">å·²å½•ç”¨</el-tag>
+            <el-tag v-else type="danger">å·²æ‹’ç»</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="ÊÇ·ñÒÑ¶Á" width="80" align="center">
+        <el-table-column label="æ˜¯å¦å·²è¯»" width="80" align="center">
           <template #default="{ row }">
-            <el-tag v-if="row.isRead === '1'" type="success" size="small">ÒÑ¶Á</el-tag>
-            <el-tag v-else type="warning" size="small">Î´¶Á</el-tag>
+            <el-tag v-if="row.isRead === '1'" type="success" size="small">å·²è¯»</el-tag>
+            <el-tag v-else type="warning" size="small">æœªè¯»</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="²Ù×÷" width="150" fixed="right" align="center">
+        <el-table-column label="æ“ä½œ" width="150" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button link type="primary" icon="View" @click="handleDetail(row)">ÏêÇé</el-button>
+            <el-button link type="primary" icon="View" @click="handleDetail(row)">è¯¦æƒ…</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -144,31 +144,31 @@
       />
     </el-card>
 
-    <!-- Í¶µİÏêÇé¶Ô»°¿ò -->
-    <el-dialog v-model="detailVisible" title="Í¶µİÏêÇé" width="700px" append-to-body>
+    <!-- æŠ•é€’è¯¦æƒ…å¯¹è¯æ¡† -->
+    <el-dialog v-model="detailVisible" title="æŠ•é€’è¯¦æƒ…" width="700px" append-to-body>
       <el-descriptions :column="2" border v-if="currentApply">
-        <el-descriptions-item label="Í¶µİID">{{ currentApply.applyId }}</el-descriptions-item>
-        <el-descriptions-item label="×´Ì¬">
-          <el-tag v-if="currentApply.status === '0'" type="info">ÒÑÍ¶µİ</el-tag>
-          <el-tag v-else-if="currentApply.status === '1'" type="primary">ÃæÊÔÑûÇë</el-tag>
-          <el-tag v-else-if="currentApply.status === '2'" type="success">ÒÑÂ¼ÓÃ</el-tag>
-          <el-tag v-else type="danger">ÒÑ¾Ü¾ø</el-tag>
+        <el-descriptions-item label="æŠ•é€’ID">{{ currentApply.applyId }}</el-descriptions-item>
+        <el-descriptions-item label="çŠ¶æ€">
+          <el-tag v-if="currentApply.status === '0'" type="info">å·²æŠ•é€’</el-tag>
+          <el-tag v-else-if="currentApply.status === '1'" type="primary">é¢è¯•é‚€è¯·</el-tag>
+          <el-tag v-else-if="currentApply.status === '2'" type="success">å·²å½•ç”¨</el-tag>
+          <el-tag v-else type="danger">å·²æ‹’ç»</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="ÇóÖ°Õß">{{ currentApply.userName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="ÁªÏµµç»°">{{ currentApply.phonenumber || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="¸ÚÎ»Ãû³Æ" :span="2">{{ currentApply.jobName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="ÆóÒµÃû³Æ">{{ currentApply.companyName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="Ğ½×Ê">{{ currentApply.salary || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="Í¶µİÊ±¼ä">{{ currentApply.applyTime }}</el-descriptions-item>
-        <el-descriptions-item label="ÊÇ·ñÒÑ¶Á">
-          <el-tag v-if="currentApply.isRead === '1'" type="success">ÒÑ¶Á</el-tag>
-          <el-tag v-else type="warning">Î´¶Á</el-tag>
+        <el-descriptions-item label="æ±‚èŒè€…">{{ currentApply.userName || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="è”ç³»ç”µè¯">{{ currentApply.phonenumber || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="å²—ä½åç§°" :span="2">{{ currentApply.jobName || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="ä¼ä¸šåç§°">{{ currentApply.companyName || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="è–ªèµ„">{{ currentApply.salary || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="æŠ•é€’æ—¶é—´">{{ currentApply.applyTime }}</el-descriptions-item>
+        <el-descriptions-item label="æ˜¯å¦å·²è¯»">
+          <el-tag v-if="currentApply.isRead === '1'" type="success">å·²è¯»</el-tag>
+          <el-tag v-else type="warning">æœªè¯»</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="´´½¨Ê±¼ä">{{ currentApply.createTime }}</el-descriptions-item>
-        <el-descriptions-item label="±¸×¢" :span="2">{{ currentApply.message || 'ÔİÎŞ' }}</el-descriptions-item>
+        <el-descriptions-item label="åˆ›å»ºæ—¶é—´">{{ currentApply.createTime }}</el-descriptions-item>
+        <el-descriptions-item label="å¤‡æ³¨" :span="2">{{ currentApply.message || 'æš‚æ— ' }}</el-descriptions-item>
       </el-descriptions>
       <template #footer>
-        <el-button @click="detailVisible = false">¹Ø±Õ</el-button>
+        <el-button @click="detailVisible = false">å…³é—­</el-button>
       </template>
     </el-dialog>
   </div>
@@ -210,7 +210,7 @@ async function loadData() {
     tableData.value = res.rows || [];
     total.value = res.total || 0;
   } catch (error) {
-    console.error('¼ÓÔØÊı¾İÊ§°Ü:', error);
+    console.error('åŠ è½½æ•°æ®å¤±è´¥:', error);
   } finally {
     loading.value = false;
   }
@@ -221,7 +221,7 @@ async function loadStatistics() {
     const res = await getApplyStatistics();
     Object.assign(statistics, res.data || {});
   } catch (error) {
-    console.error('¼ÓÔØÍ³¼ÆÊ§°Ü:', error);
+    console.error('åŠ è½½ç»Ÿè®¡å¤±è´¥:', error);
   }
 }
 
@@ -242,10 +242,10 @@ async function handleDetail(row: any) {
     const res = await getApply(row.applyId);
     currentApply.value = res.data;
     detailVisible.value = true;
-    // Ë¢ĞÂÁĞ±íÒÔ¸üĞÂÒÑ¶Á×´Ì¬
+    // åˆ·æ–°åˆ—è¡¨ä»¥æ›´æ–°å·²è¯»çŠ¶æ€
     loadData();
   } catch (error) {
-    ElMessage.error('»ñÈ¡Í¶µİÏêÇéÊ§°Ü');
+    ElMessage.error('è·å–æŠ•é€’è¯¦æƒ…å¤±è´¥');
   }
 }
 

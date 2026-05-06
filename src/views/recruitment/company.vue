@@ -1,11 +1,11 @@
 <template>
   <div class="p-4">
-    <!-- Í³¼Æ¿¨Æ¬ -->
+    <!-- ç»Ÿè®¡å¡ç‰‡ -->
     <el-row :gutter="20" class="mb-4">
       <el-col :span="6">
         <el-card shadow="hover" class="stat-mini-card">
           <div class="stat-mini">
-            <span class="label">ÆóÒµ×ÜÊı</span>
+            <span class="label">ä¼ä¸šæ€»æ•°</span>
             <span class="value">{{ statistics.totalCount || 0 }}</span>
           </div>
         </el-card>
@@ -13,7 +13,7 @@
       <el-col :span="6">
         <el-card shadow="hover" class="stat-mini-card warning">
           <div class="stat-mini">
-            <span class="label">´ıÉóºË</span>
+            <span class="label">å¾…å®¡æ ¸</span>
             <span class="value warning">{{ statistics.pendingCount || 0 }}</span>
           </div>
         </el-card>
@@ -21,7 +21,7 @@
       <el-col :span="6">
         <el-card shadow="hover" class="stat-mini-card success">
           <div class="stat-mini">
-            <span class="label">ÒÑÈÏÖ¤</span>
+            <span class="label">å·²è®¤è¯</span>
             <span class="value success">{{ statistics.approvedCount || 0 }}</span>
           </div>
         </el-card>
@@ -29,46 +29,64 @@
       <el-col :span="6">
         <el-card shadow="hover" class="stat-mini-card danger">
           <div class="stat-mini">
-            <span class="label">ÒÑ½ûÓÃ</span>
+            <span class="label">å·²ç¦ç”¨</span>
             <span class="value danger">{{ statistics.disabledCount || 0 }}</span>
           </div>
         </el-card>
       </el-col>
     </el-row>
 
-    <!-- ËÑË÷À¸ -->
+    <!-- ç¦è¨€ç»Ÿè®¡ï¼ˆç‹¬ç«‹ä¸€è¡Œï¼‰ -->
+    <el-row :gutter="20" class="mb-4">
+      <el-col :span="6">
+        <el-card shadow="hover" class="stat-mini-card danger">
+          <div class="stat-mini">
+            <span class="label">è¢«ç¦è¨€ä¼ä¸š</span>
+            <span class="value danger">{{ statistics.silencedCount || 0 }}</span>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- æŸ¥è¯¢è¡¨å• -->
     <el-card shadow="hover" class="mb-4">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="ÆóÒµÃû³Æ" prop="companyName">
-          <el-input v-model="queryParams.companyName" placeholder="ÇëÊäÈëÆóÒµÃû³Æ" clearable @keyup.enter="handleQuery" />
+        <el-form-item label="ä¼ä¸šåç§°" prop="companyName">
+          <el-input v-model="queryParams.companyName" placeholder="è¯·è¾“å…¥ä¼ä¸šåç§°" clearable @keyup.enter="handleQuery" />
         </el-form-item>
-        <el-form-item label="×´Ì¬" prop="status">
-          <el-select v-model="queryParams.status" placeholder="È«²¿" clearable style="width: 150px">
-            <el-option label="´ıÉóºË" value="0" />
-            <el-option label="ÒÑÈÏÖ¤" value="1" />
-            <el-option label="ÒÑ½ûÓÃ" value="2" />
+        <el-form-item label="çŠ¶æ€" prop="status">
+          <el-select v-model="queryParams.status" placeholder="å…¨éƒ¨" clearable style="width: 150px">
+            <el-option label="å¾…å®¡æ ¸" value="0" />
+            <el-option label="å·²è®¤è¯" value="1" />
+            <el-option label="å·²ç¦ç”¨" value="2" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="ç¦è¨€çŠ¶æ€" prop="isSilenced">
+          <el-select v-model="queryParams.isSilenced" placeholder="å…¨éƒ¨" clearable style="width: 150px">
+            <el-option label="æ­£å¸¸" value="0" />
+            <el-option label="å·²ç¦è¨€" value="1" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="Search" @click="handleQuery">ËÑË÷</el-button>
-          <el-button icon="Refresh" @click="resetQuery">ÖØÖÃ</el-button>
+          <el-button type="primary" icon="Search" @click="handleQuery">æœç´¢</el-button>
+          <el-button icon="Refresh" @click="resetQuery">é‡ç½®</el-button>
         </el-form-item>
       </el-form>
     </el-card>
 
-    <!-- Êı¾İ±í¸ñ -->
+    <!-- æ•°æ®è¡¨æ ¼ -->
     <el-card shadow="hover">
       <template #header>
         <el-row :gutter="10">
           <el-col :span="1.5">
-            <el-button type="primary" plain icon="Refresh" @click="loadData">Ë¢ĞÂ</el-button>
+            <el-button type="primary" plain icon="Refresh" @click="loadData">åˆ·æ–°</el-button>
           </el-col>
         </el-row>
       </template>
 
       <el-table v-loading="loading" :data="tableData" border stripe>
-        <el-table-column label="ÆóÒµID" prop="companyId" width="80" align="center" />
-        <el-table-column label="ÆóÒµĞÅÏ¢" min-width="200">
+        <el-table-column label="ä¼ä¸šID" prop="companyId" width="80" align="center" />
+        <el-table-column label="ä¼ä¸šä¿¡æ¯" min-width="200">
           <template #default="{ row }">
             <div class="company-info">
               <el-avatar v-if="row.logoUrl" :src="row.logoUrl" :size="40" />
@@ -77,48 +95,62 @@
               </el-avatar>
               <div class="company-detail">
                 <div class="name">{{ row.companyName }}</div>
-                <div class="desc text-secondary">{{ row.description || 'ÔİÎŞÃèÊö' }}</div>
+                <div class="desc text-secondary">{{ row.description || 'æš‚æ— æè¿°' }}</div>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="ÁªÏµÈË" width="150">
+        <el-table-column label="è”ç³»äºº" width="150">
           <template #default="{ row }">
             <div>{{ row.contactPerson || '-' }}</div>
             <div class="text-secondary">{{ row.contactPhone || '' }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="¸ÚÎ»Êı" prop="jobCount" width="100" align="center">
+        <el-table-column label="èŒä½æ•°" prop="jobCount" width="100" align="center">
           <template #default="{ row }">
             <el-tag type="info">{{ row.jobCount || 0 }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="Í¶µİÊı" prop="applyCount" width="100" align="center">
+        <el-table-column label="æŠ•é€’æ•°" prop="applyCount" width="100" align="center">
           <template #default="{ row }">
             <el-tag type="success">{{ row.applyCount || 0 }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="×´Ì¬" width="100" align="center">
+        <el-table-column label="è®¤è¯çŠ¶æ€" width="100" align="center">
           <template #default="{ row }">
-            <el-tag v-if="row.status === '0'" type="warning">´ıÉóºË</el-tag>
-            <el-tag v-else-if="row.status === '1'" type="success">ÒÑÈÏÖ¤</el-tag>
-            <el-tag v-else type="danger">ÒÑ½ûÓÃ</el-tag>
+            <el-tag v-if="row.status === '0'" type="warning">å¾…å®¡æ ¸</el-tag>
+            <el-tag v-else-if="row.status === '1'" type="success">å·²è®¤è¯</el-tag>
+            <el-tag v-else type="danger">å·²ç¦ç”¨</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="Èë×¤Ê±¼ä" prop="createTime" width="160" align="center" />
-        <el-table-column label="²Ù×÷" width="180" fixed="right" align="center">
+        <el-table-column label="ç¦è¨€çŠ¶æ€" width="110" align="center">
           <template #default="{ row }">
-            <el-button link type="primary" icon="View" @click="handleDetail(row)">ÏêÇé</el-button>
+            <el-tag v-if="row.isSilenced === '1'" type="danger">
+              <el-icon><WarnTriangleFilled /></el-icon> å·²ç¦è¨€
+            </el-tag>
+            <el-tag v-else type="info">æ­£å¸¸</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="æ³¨å†Œæ—¶é—´" prop="createTime" width="160" align="center" />
+        <el-table-column label="æ“ä½œ" width="200" fixed="right" align="center">
+          <template #default="{ row }">
+            <el-button link type="primary" icon="View" @click="handleDetail(row)">è¯¦æƒ…</el-button>
             <el-dropdown trigger="click">
               <span class="el-dropdown-link">
-                <el-button link type="primary">¸ü¶à<el-icon class="el-icon--right"><arrow-down /></el-icon></el-button>
+                <el-button link type="primary">ç®¡ç†<el-icon class="el-icon--right"><arrow-down /></el-icon></el-button>
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item v-if="row.status === '0'" icon="CircleCheck" @click="handleAudit(row, '1')">ÉóºËÍ¨¹ı</el-dropdown-item>
-                  <el-dropdown-item v-if="row.status === '0'" icon="Close" @click="handleAudit(row, '2')">ÉóºË¾Ü¾ø</el-dropdown-item>
-                  <el-dropdown-item v-if="row.status === '1'" icon="Lock" @click="handleStatusChange(row, '2')">½ûÓÃÆóÒµ</el-dropdown-item>
-                  <el-dropdown-item v-if="row.status === '2'" icon="Unlock" @click="handleStatusChange(row, '1')">ÆôÓÃÆóÒµ</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === '0'" icon="CircleCheck" @click="handleAudit(row, '1')">å®¡æ ¸é€šè¿‡</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === '0'" icon="Close" @click="handleAudit(row, '2')">å®¡æ ¸æ‹’ç»</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === '1'" icon="Lock" @click="handleStatusChange(row, '2')">ç¦ç”¨ä¼ä¸š</el-dropdown-item>
+                  <el-dropdown-item v-if="row.status === '2'" icon="Unlock" @click="handleStatusChange(row, '1')">å¯ç”¨ä¼ä¸š</el-dropdown-item>
+                  <el-dropdown-item divided icon="MuteNotification" @click="handleSilence(row)" v-if="row.isSilenced !== '1'">
+                    ç¦è¨€ä¼ä¸š
+                  </el-dropdown-item>
+                  <el-dropdown-item icon="MuteNotification" @click="handleUnsilence(row)" v-if="row.isSilenced === '1'">
+                    å–æ¶ˆç¦è¨€
+                  </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -135,46 +167,82 @@
       />
     </el-card>
 
-    <!-- ÆóÒµÏêÇé¶Ô»°¿ò -->
-    <el-dialog v-model="detailVisible" title="ÆóÒµÏêÇé" width="700px" append-to-body>
+    <!-- ä¼ä¸šè¯¦æƒ…å¯¹è¯æ¡† -->
+    <el-dialog v-model="detailVisible" title="ä¼ä¸šè¯¦æƒ…" width="700px" append-to-body>
       <el-descriptions :column="2" border v-if="currentCompany">
-        <el-descriptions-item label="ÆóÒµID">{{ currentCompany.companyId }}</el-descriptions-item>
-        <el-descriptions-item label="ÆóÒµ×´Ì¬">
-          <el-tag v-if="currentCompany.status === '0'" type="warning">´ıÉóºË</el-tag>
-          <el-tag v-else-if="currentCompany.status === '1'" type="success">ÒÑÈÏÖ¤</el-tag>
-          <el-tag v-else type="danger">ÒÑ½ûÓÃ</el-tag>
+        <el-descriptions-item label="ä¼ä¸šID">{{ currentCompany.companyId }}</el-descriptions-item>
+        <el-descriptions-item label="ä¼ä¸šçŠ¶æ€">
+          <el-tag v-if="currentCompany.status === '0'" type="warning">å¾…å®¡æ ¸</el-tag>
+          <el-tag v-else-if="currentCompany.status === '1'" type="success">å·²è®¤è¯</el-tag>
+          <el-tag v-else type="danger">å·²ç¦ç”¨</el-tag>
         </el-descriptions-item>
-        <el-descriptions-item label="ÆóÒµÃû³Æ" :span="2">{{ currentCompany.companyName }}</el-descriptions-item>
-        <el-descriptions-item label="ÆóÒµÃèÊö" :span="2">{{ currentCompany.description || 'ÔİÎŞ' }}</el-descriptions-item>
-        <el-descriptions-item label="ÁªÏµÈË">{{ currentCompany.contactPerson || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="ÁªÏµµç»°">{{ currentCompany.contactPhone || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="¸ÚÎ»ÊıÁ¿">{{ currentCompany.jobCount || 0 }}</el-descriptions-item>
-        <el-descriptions-item label="Í¶µİÊıÁ¿">{{ currentCompany.applyCount || 0 }}</el-descriptions-item>
-        <el-descriptions-item label="´´½¨Ê±¼ä">{{ currentCompany.createTime }}</el-descriptions-item>
-        <el-descriptions-item label="¸üĞÂÊ±¼ä">{{ currentCompany.updateTime }}</el-descriptions-item>
-        <el-descriptions-item label="±¸×¢" :span="2">{{ currentCompany.remark || 'ÔİÎŞ' }}</el-descriptions-item>
+        <el-descriptions-item label="ä¼ä¸šåç§°" :span="2">{{ currentCompany.companyName }}</el-descriptions-item>
+        <el-descriptions-item label="ä¼ä¸šæè¿°" :span="2">{{ currentCompany.description || 'æ— ' }}</el-descriptions-item>
+        <el-descriptions-item label="è”ç³»äºº">{{ currentCompany.contactPerson || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="è”ç³»ç”µè¯">{{ currentCompany.contactPhone || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="èŒä½æ•°é‡">{{ currentCompany.jobCount || 0 }}</el-descriptions-item>
+        <el-descriptions-item label="æŠ•é€’æ€»æ•°">{{ currentCompany.applyCount || 0 }}</el-descriptions-item>
+        <el-descriptions-item label="ç¦è¨€çŠ¶æ€">
+          <el-tag v-if="currentCompany.isSilenced === '1'" type="danger">å·²ç¦è¨€</el-tag>
+          <el-tag v-else type="info">æ­£å¸¸</el-tag>
+        </el-descriptions-item>
+        <el-descriptions-item label="ç¦è¨€åŸå› " v-if="currentCompany.isSilenced === '1'">
+          {{ currentCompany.silenceReason || 'æ— ' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="ç¦è¨€æ—¶é—´" v-if="currentCompany.isSilenced === '1'">
+          {{ currentCompany.silenceTime || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="æ³¨å†Œæ—¶é—´">{{ currentCompany.createTime }}</el-descriptions-item>
+        <el-descriptions-item label="æ›´æ–°æ—¶é—´">{{ currentCompany.updateTime }}</el-descriptions-item>
+        <el-descriptions-item label="å¤‡æ³¨" :span="2">{{ currentCompany.remark || 'æ— ' }}</el-descriptions-item>
       </el-descriptions>
       <template #footer>
-        <el-button @click="detailVisible = false">¹Ø±Õ</el-button>
+        <el-button @click="detailVisible = false">å…³é—­</el-button>
       </template>
     </el-dialog>
 
-    <!-- ÉóºË¶Ô»°¿ò -->
-    <el-dialog v-model="auditVisible" title="ÆóÒµÉóºË" width="500px" append-to-body>
+    <!-- å®¡æ ¸å¯¹è¯æ¡† -->
+    <el-dialog v-model="auditVisible" title="ä¼ä¸šå®¡æ ¸" width="500px" append-to-body>
       <el-form ref="auditFormRef" :model="auditForm" label-width="80px">
-        <el-form-item label="ÉóºË½á¹û">
+        <el-form-item label="å®¡æ ¸ç»“æœ">
           <el-radio-group v-model="auditForm.status">
-            <el-radio label="1">ÉóºËÍ¨¹ı</el-radio>
-            <el-radio label="2">ÉóºË¾Ü¾ø</el-radio>
+            <el-radio label="1">å®¡æ ¸é€šè¿‡</el-radio>
+            <el-radio label="2">å®¡æ ¸æ‹’ç»</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="±¸×¢">
-          <el-input v-model="auditForm.remark" type="textarea" :rows="3" placeholder="ÇëÊäÈëÉóºË±¸×¢" />
+        <el-form-item label="å¤‡æ³¨">
+          <el-input v-model="auditForm.remark" type="textarea" :rows="3" placeholder="è¯·è¾“å…¥å®¡æ ¸å¤‡æ³¨" />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="auditVisible = false">È¡Ïû</el-button>
-        <el-button type="primary" @click="submitAudit">È·¶¨</el-button>
+        <el-button @click="auditVisible = false">å–æ¶ˆ</el-button>
+        <el-button type="primary" @click="submitAudit">ç¡®è®¤</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- ç¦è¨€å¯¹è¯æ¡† -->
+    <el-dialog v-model="silenceVisible" title="ç¦è¨€ä¼ä¸š" width="500px" append-to-body>
+      <el-form ref="silenceFormRef" :model="silenceForm" label-width="100px">
+        <el-alert type="warning" :closable="false" style="margin-bottom: 16px">
+          ç¦è¨€åè¯¥ä¼ä¸šå°†æ— æ³•å‘å¸ƒæ–°èŒä½ï¼Œä¹‹å‰å‘å¸ƒçš„èŒä½å¯æ­£å¸¸è¢«æŸ¥çœ‹å’ŒæŠ•é€’
+        </el-alert>
+        <el-form-item label="ä¼ä¸šåç§°">
+          <el-input :model-value="silenceForm.companyName" disabled />
+        </el-form-item>
+        <el-form-item label="ç¦è¨€åŸå› " prop="reason" required>
+          <el-input
+            v-model="silenceForm.reason"
+            type="textarea"
+            :rows="3"
+            placeholder="è¯·è¾“å…¥ç¦è¨€åŸå› ï¼Œä¾¿äºåç»­ç®¡ç†è®°å½•"
+            maxlength="200"
+            show-word-limit
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="silenceVisible = false">å–æ¶ˆ</el-button>
+        <el-button type="danger" @click="submitSilence">ç¡®è®¤ç¦è¨€</el-button>
       </template>
     </el-dialog>
   </div>
@@ -188,7 +256,9 @@ import {
   getCompanyStatistics,
   getCompany,
   auditCompany,
-  changeCompanyStatus
+  changeCompanyStatus,
+  silenceCompany,
+  unsilenceCompany,
 } from '@/api/recruitment';
 
 const loading = ref(false);
@@ -196,28 +266,38 @@ const total = ref(0);
 const tableData = ref<any[]>([]);
 const detailVisible = ref(false);
 const auditVisible = ref(false);
+const silenceVisible = ref(false);
 const currentCompany = ref<any>(null);
 const queryFormRef = ref();
 const auditFormRef = ref();
+const silenceFormRef = ref();
 
 const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
   companyName: '',
-  status: ''
+  status: '',
+  isSilenced: '',
 });
 
 const statistics = reactive({
   totalCount: 0,
   pendingCount: 0,
   approvedCount: 0,
-  disabledCount: 0
+  disabledCount: 0,
+  silencedCount: 0,
 });
 
 const auditForm = reactive({
   companyId: 0,
   status: '1',
-  remark: ''
+  remark: '',
+});
+
+const silenceForm = reactive({
+  companyId: 0,
+  companyName: '',
+  reason: '',
 });
 
 async function loadData() {
@@ -227,7 +307,7 @@ async function loadData() {
     tableData.value = res.rows || [];
     total.value = res.total || 0;
   } catch (error) {
-    console.error('¼ÓÔØÊı¾İÊ§°Ü:', error);
+    ElMessage.error('åŠ è½½æ•°æ®å¤±è´¥');
   } finally {
     loading.value = false;
   }
@@ -238,7 +318,7 @@ async function loadStatistics() {
     const res = await getCompanyStatistics();
     Object.assign(statistics, res.data || {});
   } catch (error) {
-    console.error('¼ÓÔØÍ³¼ÆÊ§°Ü:', error);
+    console.error('ç»Ÿè®¡åŠ è½½å¤±è´¥:', error);
   }
 }
 
@@ -251,6 +331,7 @@ function resetQuery() {
   queryFormRef.value?.resetFields();
   queryParams.pageNum = 1;
   queryParams.status = '';
+  queryParams.isSilenced = '';
   loadData();
 }
 
@@ -260,7 +341,7 @@ async function handleDetail(row: any) {
     currentCompany.value = res.data;
     detailVisible.value = true;
   } catch (error) {
-    ElMessage.error('»ñÈ¡ÆóÒµÏêÇéÊ§°Ü');
+    ElMessage.error('è·å–ä¼ä¸šè¯¦æƒ…å¤±è´¥');
   }
 }
 
@@ -274,30 +355,71 @@ function handleAudit(row: any, status: string) {
 async function submitAudit() {
   try {
     await auditCompany(auditForm);
-    ElMessage.success('ÉóºË³É¹¦');
+    ElMessage.success('å®¡æ ¸æˆåŠŸ');
     auditVisible.value = false;
     loadData();
     loadStatistics();
   } catch (error) {
-    ElMessage.error('ÉóºËÊ§°Ü');
+    ElMessage.error('å®¡æ ¸å¤±è´¥');
   }
 }
 
 async function handleStatusChange(row: any, status: string) {
-  const action = status === '1' ? 'ÆôÓÃ' : '½ûÓÃ';
+  const action = status === '1' ? 'å¯ç”¨' : 'ç¦ç”¨';
   try {
-    await ElMessageBox.confirm(`È·ÈÏÒª${action}¸ÃÆóÒµÂğ£¿`, 'ÌáÊ¾', {
-      confirmButtonText: 'È·¶¨',
-      cancelButtonText: 'È¡Ïû',
-      type: 'warning'
+    await ElMessageBox.confirm(`ç¡®å®šè¦${action}è¯¥ä¼ä¸šå—ï¼Ÿ`, 'æç¤º', {
+      confirmButtonText: 'ç¡®è®¤',
+      cancelButtonText: 'å–æ¶ˆ',
+      type: 'warning',
     });
     await changeCompanyStatus({ companyId: row.companyId, status });
-    ElMessage.success(`${action}³É¹¦`);
+    ElMessage.success(`${action}æˆåŠŸ`);
     loadData();
     loadStatistics();
   } catch (error: any) {
     if (error !== 'cancel') {
-      ElMessage.error(`${action}Ê§°Ü`);
+      ElMessage.error(`${action}å¤±è´¥`);
+    }
+  }
+}
+
+function handleSilence(row: any) {
+  silenceForm.companyId = row.companyId;
+  silenceForm.companyName = row.companyName;
+  silenceForm.reason = '';
+  silenceVisible.value = true;
+}
+
+async function submitSilence() {
+  if (!silenceForm.reason.trim()) {
+    ElMessage.warning('è¯·å¡«å†™ç¦è¨€åŸå› ');
+    return;
+  }
+  try {
+    await silenceCompany({ companyId: silenceForm.companyId, silenceReason: silenceForm.reason });
+    ElMessage.success('ç¦è¨€æˆåŠŸ');
+    silenceVisible.value = false;
+    loadData();
+    loadStatistics();
+  } catch (error) {
+    ElMessage.error('ç¦è¨€å¤±è´¥');
+  }
+}
+
+async function handleUnsilence(row: any) {
+  try {
+    await ElMessageBox.confirm('ç¡®å®šè¦å–æ¶ˆè¯¥ä¼ä¸šçš„ç¦è¨€çŠ¶æ€å—ï¼Ÿå–æ¶ˆåè¯¥ä¼ä¸šå¯æ­£å¸¸å‘å¸ƒèŒä½ã€‚', 'æç¤º', {
+      confirmButtonText: 'ç¡®è®¤',
+      cancelButtonText: 'å–æ¶ˆ',
+      type: 'warning',
+    });
+    await unsilenceCompany({ companyId: row.companyId });
+    ElMessage.success('å·²å–æ¶ˆç¦è¨€');
+    loadData();
+    loadStatistics();
+  } catch (error: any) {
+    if (error !== 'cancel') {
+      ElMessage.error('æ“ä½œå¤±è´¥');
     }
   }
 }
@@ -321,41 +443,33 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px 0;
+  gap: 4px;
 }
 
 .stat-mini .label {
-  font-size: 14px;
+  font-size: 13px;
   color: #909399;
-  margin-bottom: 8px;
 }
 
 .stat-mini .value {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
   color: #303133;
 }
 
-.stat-mini .value.warning {
-  color: #E6A23C;
-}
+.stat-mini .value.warning { color: #E6A23C; }
+.stat-mini .value.success { color: #67C23A; }
+.stat-mini .value.danger  { color: #F56C6C; }
 
-.stat-mini .value.success {
-  color: #67C23A;
-}
-
-.stat-mini .value.danger {
-  color: #F56C6C;
+.text-secondary {
+  font-size: 12px;
+  color: #909399;
 }
 
 .company-info {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.company-detail {
-  flex: 1;
+  gap: 10px;
 }
 
 .company-detail .name {
@@ -365,11 +479,16 @@ onMounted(() => {
 
 .company-detail .desc {
   font-size: 12px;
-  margin-top: 4px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.text-secondary {
-  color: #909399;
-  font-size: 12px;
+.el-dropdown-link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
 }
 </style>
