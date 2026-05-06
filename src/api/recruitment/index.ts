@@ -341,7 +341,19 @@ export function getCompanyStatistics() {
   return request.get<any>(`${baseUrl}/company/statistics`);
 }
 
-// ---------- 求职者禁言管理 ----------
+// ---------- 求职者管理 ----------
+
+export interface UserStatistics {
+  totalCount: number;
+  silencedCount: number;
+  normalCount: number;
+  appliedCount: number;
+  pendingApplyCount: number;
+}
+
+export function statisticsUser() {
+  return request.get<UserStatistics>(`${baseUrl}/user/statistics`);
+}
 
 export function silenceUser(data: { userId: number; reason: string }) {
   return request.post(`${baseUrl}/user/silence`, data);
@@ -349,10 +361,6 @@ export function silenceUser(data: { userId: number; reason: string }) {
 
 export function unsilenceUser(data: { userId: number }) {
   return request.post(`${baseUrl}/user/unsilence`, data);
-}
-
-export function getUserSilenceStatistics() {
-  return request.get<any>(`${baseUrl}/user/silenceStatistics`);
 }
 
 export function listUsers(params?: {

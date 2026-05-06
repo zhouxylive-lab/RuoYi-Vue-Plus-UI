@@ -42,6 +42,9 @@
         <el-form-item label="岗位名称" prop="jobName">
           <el-input v-model="queryParams.jobName" placeholder="请输入岗位名称" clearable @keyup.enter="handleQuery" />
         </el-form-item>
+        <el-form-item label="所属企业" prop="companyName">
+          <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" clearable @keyup.enter="handleQuery" />
+        </el-form-item>
         <el-form-item label="岗位类型" prop="jobType">
           <el-select v-model="queryParams.jobType" placeholder="全部" clearable style="width: 120px">
             <el-option label="全职" value="0" />
@@ -69,16 +72,12 @@
       <template #header>
         <el-row :gutter="10">
           <el-col :span="1.5">
-            <el-button type="success" plain icon="Check" :disabled="multiple" @click="handleBatchAudit">批量审核</el-button>
-          </el-col>
-          <el-col :span="1.5">
             <el-button type="primary" plain icon="Refresh" @click="loadData">刷新</el-button>
           </el-col>
         </el-row>
       </template>
 
-      <el-table v-loading="loading" :data="tableData" border stripe @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="50" align="center" />
+      <el-table v-loading="loading" :data="tableData" border stripe>
         <el-table-column label="岗位ID" prop="jobId" width="80" align="center" />
         <el-table-column label="岗位信息" min-width="250">
           <template #default="{ row }">
@@ -203,24 +202,6 @@
       </template>
     </el-dialog>
 
-    <!-- 批量审核对话框 -->
-    <el-dialog v-model="batchAuditVisible" title="批量审核" width="500px" append-to-body>
-      <el-form ref="batchAuditFormRef" :model="batchAuditForm" label-width="80px">
-        <el-form-item label="待审核">
-          <span>{{ selectedJobs.length }} 个岗位</span>
-        </el-form-item>
-        <el-form-item label="审核结果">
-          <el-radio-group v-model="batchAuditForm.status">
-            <el-radio label="1">全部通过（上架）</el-radio>
-            <el-radio label="2">全部拒绝（下架）</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="batchAuditVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitBatchAudit">确定</el-button>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -232,7 +213,6 @@ import {
   getJobStatistics,
   getJob,
   auditJob,
-  batchAuditJob,
   changeJobStatus,
   delJob
 } from '@/api/recruitment';
@@ -240,22 +220,19 @@ import {
 const loading = ref(false);
 const total = ref(0);
 const tableData = ref<any[]>([]);
-const selectedJobs = ref<any[]>([]);
-const multiple = ref(true);
 const detailVisible = ref(false);
 const auditVisible = ref(false);
-const batchAuditVisible = ref(false);
 const currentJob = ref<any>(null);
 const queryFormRef = ref();
 const auditFormRef = ref();
-const batchAuditFormRef = ref();
 
 const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
   jobName: '',
   jobType: '',
-  status: ''
+  status: '',
+  companyName: ''
 });
 
 const statistics = reactive({
@@ -269,11 +246,6 @@ const auditForm = reactive({
   jobId: 0,
   status: '1',
   remark: ''
-});
-
-const batchAuditForm = reactive({
-  jobIds: [] as number[],
-  status: '1'
 });
 
 async function loadData() {
@@ -306,14 +278,11 @@ function handleQuery() {
 function resetQuery() {
   queryFormRef.value?.resetFields();
   queryParams.pageNum = 1;
+  queryParams.jobName = '';
   queryParams.jobType = '';
   queryParams.status = '';
+  queryParams.companyName = '';
   loadData();
-}
-
-function handleSelectionChange(selection: any[]) {
-  selectedJobs.value = selection;
-  multiple.value = !selection.length;
 }
 
 async function handleDetail(row: any) {
@@ -342,28 +311,6 @@ async function submitAudit() {
     loadStatistics();
   } catch (error) {
     ElMessage.error('审核失败');
-  }
-}
-
-function handleBatchAudit() {
-  if (selectedJobs.value.length === 0) {
-    ElMessage.warning('请先选择要审核的岗位');
-    return;
-  }
-  batchAuditForm.jobIds = selectedJobs.value.map(item => item.jobId);
-  batchAuditForm.status = '1';
-  batchAuditVisible.value = true;
-}
-
-async function submitBatchAudit() {
-  try {
-    await batchAuditJob(batchAuditForm);
-    ElMessage.success('批量审核成功');
-    batchAuditVisible.value = false;
-    loadData();
-    loadStatistics();
-  } catch (error) {
-    ElMessage.error('批量审核失败');
   }
 }
 
