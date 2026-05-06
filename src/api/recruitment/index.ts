@@ -351,8 +351,45 @@ export interface UserStatistics {
   pendingApplyCount: number;
 }
 
+export interface RecruitmentUserVO {
+  userId: number;
+  userName: string;
+  nickName: string;
+  userType: string;
+  phonenumber: string;
+  email: string;
+  sex: string;
+  sexName: string;
+  avatar: number;
+  avatarUrl: string;
+  status: string;
+  statusName: string;
+  isRecruitmentSilenced: string;
+  silenceReason: string;
+  silenceTime: string;
+  totalApplies: number;
+  pendingApplies: number;
+  interviewApplies: number;
+  hiredApplies: number;
+  rejectedApplies: number;
+  loginIp: string;
+  loginDate: string;
+  createTime: string;
+  remark: string;
+}
+
 export function statisticsUser() {
   return request.get<UserStatistics>(`${baseUrl}/user/statistics`);
+}
+
+export function listUsersWithStats(params?: {
+  pageNum?: number;
+  pageSize?: number;
+  userName?: string;
+  phonenumber?: string;
+  isRecruitmentSilenced?: string;
+}) {
+  return request.get<{ rows: RecruitmentUserVO[]; total: number }>(`${baseUrl}/user/listWithStats`, { params });
 }
 
 export function silenceUser(data: { userId: number; reason: string }) {
