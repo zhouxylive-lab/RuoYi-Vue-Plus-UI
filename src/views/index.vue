@@ -72,7 +72,7 @@
         <el-card shadow="hover" class="kpi-card" @click="router.push('/recruitment/apply')">
           <div class="kpi-top">
             <div class="kpi-icon-wrap warning">
-              <el-icon><DocumentCopied /></el-icon>
+              <el-icon><DocumentCopy /></el-icon>
             </div>
             <div class="kpi-meta">
               <span class="kpi-label">简历投递</span>
@@ -286,7 +286,7 @@ import {
   Refresh,
   OfficeBuilding,
   Briefcase,
-  DocumentCopied,
+  DocumentCopy,
   Tickets,
   CircleCheck,
   Clock,
