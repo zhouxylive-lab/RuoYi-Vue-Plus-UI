@@ -164,21 +164,18 @@ export interface RecruitmentOverview {
   pendingCompanies: number;
   approvedCompanies: number;
   activeCompanies: number;
+  newCompaniesDelta: number;
   totalJobs: number;
   pendingJobs: number;
   onlineJobs: number;
+  newJobsDelta: number;
   totalApplies: number;
   todayApplies: number;
-  totalTasks: number;
-  inProgressTasks: number;
   pendingApplies: number;
   processedApplies: number;
-  totalUsers: number;
-  activeUsers: number;
-  todayUsers: number;
-  newCompaniesDelta: number;
-  newJobsDelta: number;
   newAppliesDelta: number;
+  totalTasks: number;
+  inProgressTasks: number;
   silencedCompanies: number;
   silencedUsers: number;
 }
@@ -230,6 +227,7 @@ export interface HotJobVO {
   browseCount?: number;
   salary?: string;
   location?: string;
+  createTime?: string;
 }
 
 // ========== 异常投递记录 ==========

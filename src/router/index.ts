@@ -93,7 +93,62 @@ export const constantRoutes: RouteRecordRaw[] = [
 
 // 动态路由，基于用户权限动态去加载
 export const dynamicRoutes: RouteRecordRaw[] = [
-
+  {
+    path: '/recruitment',
+    component: Layout,
+    name: 'Recruitment',
+    meta: { title: '招聘管理', icon: 'peoples' },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/recruitment/index.vue'),
+        name: 'RecruitmentOverview',
+        meta: { title: '招聘概览', icon: 'chart' }
+      },
+      {
+        path: 'company',
+        component: () => import('@/views/recruitment/company.vue'),
+        name: 'RecruitmentCompany',
+        meta: { title: '企业管理', icon: 'company' }
+      },
+      {
+        path: 'job',
+        component: () => import('@/views/recruitment/job.vue'),
+        name: 'RecruitmentJob',
+        meta: { title: '岗位管理', icon: 'job' }
+      },
+      {
+        path: 'user',
+        component: () => import('@/views/recruitment/user.vue'),
+        name: 'RecruitmentUser',
+        meta: { title: '求职者管理', icon: 'user' }
+      },
+      {
+        path: 'apply',
+        component: () => import('@/views/recruitment/apply.vue'),
+        name: 'RecruitmentApply',
+        meta: { title: '投递管理', icon: 'list' }
+      },
+      {
+        path: 'task',
+        component: () => import('@/views/recruitment/task.vue'),
+        name: 'RecruitmentTask',
+        meta: { title: '任务管理', icon: 'my-task' }
+      },
+      {
+        path: 'ledger',
+        component: () => import('@/views/recruitment/ledger.vue'),
+        name: 'RecruitmentLedger',
+        meta: { title: '台账管理', icon: 'money' }
+      },
+      {
+        path: 'invoice',
+        component: () => import('@/views/recruitment/invoice.vue'),
+        name: 'RecruitmentInvoice',
+        meta: { title: '发票管理', icon: 'pdf' }
+      },
+    ]
+  }
 ];
 
 /**
