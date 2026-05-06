@@ -395,9 +395,9 @@ async function loadData() {
       phonenumber: queryParams.phonenumber || undefined,
       isRecruitmentSilenced: queryParams.isSilenced || undefined,
     });
-    const rows: RecruitmentUserVO[] = res.rows || [];
-    tableData.value = rows;
-    total.value = res.total || 0;
+    // 拦截器返回 res.data，res 已是 { code, data: { total, rows }, msg }
+    tableData.value = res.data?.rows || [];
+    total.value = res.data?.total || 0;
   } catch {
     tableData.value = [];
     total.value = 0;
@@ -409,7 +409,8 @@ async function loadData() {
 async function loadStatistics() {
   try {
     const res = await statisticsUser();
-    Object.assign(stats, res.data || {});
+    // 拦截器返回 res.data，故 res.data 已是 { code, data: UserStatisticsVO, msg }
+    Object.assign(stats, res.data?.data || {});
   } catch {
     // silent
   }
