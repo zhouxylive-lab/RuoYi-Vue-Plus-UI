@@ -9,6 +9,7 @@ import ParentView from '@/components/ParentView/index.vue';
 import InnerLink from '@/layout/components/InnerLink/index.vue';
 import { ref } from 'vue';
 import { createCustomNameComponent } from '@/utils/createCustomNameComponent';
+import { ElNotification } from 'element-plus/es';
 
 // 匹配views里面所有的.vue文件
 const modules = import.meta.glob('./../../views/**/*.vue');
@@ -48,9 +49,11 @@ export const usePermissionStore = defineStore('permission', () => {
   const generateRoutes = async (): Promise<RouteRecordRaw[]> => {
     const res = await getRouters();
     const { data } = res;
-    const sdata = JSON.parse(JSON.stringify(data));
-    const rdata = JSON.parse(JSON.stringify(data));
-    const defaultData = JSON.parse(JSON.stringify(data));
+    // 结构化克隆比 JSON.parse(JSON.stringify()) 更快
+    const clone = structuredClone ? structuredClone(data) : JSON.parse(JSON.stringify(data));
+    const sdata = structuredClone ? structuredClone(clone) : JSON.parse(JSON.stringify(clone));
+    const rdata = structuredClone ? structuredClone(clone) : JSON.parse(JSON.stringify(clone));
+    const defaultData = clone;
     const sidebarRoutes = filterAsyncRouter(sdata);
     const rewriteRoutes = filterAsyncRouter(rdata, undefined, true);
     const defaultRoutes = filterAsyncRouter(defaultData);

@@ -30,17 +30,20 @@ router.beforeEach(async (to, from, next) => {
     } else {
       if (useUserStore().roles.length === 0) {
         isRelogin.show = true;
-        // 判断当前用户是否已拉取完user_info信息
-        const [err] = await tos(useUserStore().getInfo());
+        // 并行获取用户信息和路由权限，不再串行等待
+        const [[err], accessRoutes] = await Promise.all([
+          tos(useUserStore().getInfo()),
+          usePermissionStore().generateRoutes(),
+        ]);
         if (err) {
+          isRelogin.show = false;
           await useUserStore().logout();
           ElMessage.error(err);
           next({ path: '/' });
         } else {
           isRelogin.show = false;
-          const accessRoutes = await usePermissionStore().generateRoutes();
           // 根据roles权限生成可访问的路由表
-          accessRoutes.forEach((route) => {
+          accessRoutes.forEach((route: any) => {
             if (!isHttp(route.path)) {
               router.addRoute(route); // 动态添加可访问路由表
             }
