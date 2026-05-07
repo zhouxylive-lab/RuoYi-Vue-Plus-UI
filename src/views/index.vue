@@ -20,7 +20,7 @@
     <el-row :gutter="16" class="mb-16">
       <!-- 企业 -->
       <el-col :xs="24" :sm="12" :md="6">
-        <el-card shadow="hover" class="kpi-card" @click="router.push('/recruitment/company')">
+        <el-card shadow="hover" class="kpi-card" @click="navigateTo('/recruitment/company')">
           <div class="kpi-top">
             <div class="kpi-icon-wrap primary">
               <el-icon><OfficeBuilding /></el-icon>
@@ -45,7 +45,7 @@
 
       <!-- 职位 -->
       <el-col :xs="24" :sm="12" :md="6">
-        <el-card shadow="hover" class="kpi-card" @click="router.push('/recruitment/job')">
+        <el-card shadow="hover" class="kpi-card" @click="navigateTo('/recruitment/job')">
           <div class="kpi-top">
             <div class="kpi-icon-wrap success">
               <el-icon><Briefcase /></el-icon>
@@ -69,7 +69,7 @@
 
       <!-- 投递 -->
       <el-col :xs="24" :sm="12" :md="6">
-        <el-card shadow="hover" class="kpi-card" @click="router.push('/recruitment/apply')">
+        <el-card shadow="hover" class="kpi-card" @click="navigateTo('/recruitment/apply')">
           <div class="kpi-top">
             <div class="kpi-icon-wrap warning">
               <el-icon><DocumentCopy /></el-icon>
@@ -93,7 +93,7 @@
 
       <!-- 任务 -->
       <el-col :xs="24" :sm="12" :md="6">
-        <el-card shadow="hover" class="kpi-card" @click="router.push('/recruitment/task')">
+        <el-card shadow="hover" class="kpi-card" @click="navigateTo('/recruitment/task')">
           <div class="kpi-top">
             <div class="kpi-icon-wrap danger">
               <el-icon><Tickets /></el-icon>
@@ -187,7 +187,7 @@
           <template #header>
             <div class="card-header">
               <span>最新发布职位</span>
-              <el-button type="primary" link @click="router.push('/recruitment/job')">查看更多 →</el-button>
+              <el-button type="primary" link @click="navigateTo('/recruitment/job')">查看更多 →</el-button>
             </div>
           </template>
           <div class="mini-list">
@@ -195,7 +195,7 @@
               v-for="job in recentJobs"
               :key="job.jobId"
               class="mini-item"
-              @click="router.push('/recruitment/job')"
+              @click="navigateTo('/recruitment/job')"
             >
               <div class="mini-info">
                 <span class="mini-title">{{ job.jobName }}</span>
@@ -217,7 +217,7 @@
           <template #header>
             <div class="card-header">
               <span>最新投递记录</span>
-              <el-button type="primary" link @click="router.push('/recruitment/apply')">查看更多 →</el-button>
+              <el-button type="primary" link @click="navigateTo('/recruitment/apply')">查看更多 →</el-button>
             </div>
           </template>
           <div class="mini-list">
@@ -225,7 +225,7 @@
               v-for="apply in recentApplies"
               :key="apply.applyId"
               class="mini-item"
-              @click="router.push('/recruitment/apply')"
+              @click="navigateTo('/recruitment/apply')"
             >
               <div class="mini-info">
                 <span class="mini-title">{{ apply.userName }}</span>
@@ -250,7 +250,7 @@
             <div class="card-header">
               <span>异常投递告警</span>
               <el-badge :value="exceptionApplies.length" type="danger" :hidden="exceptionApplies.length === 0">
-                <el-button type="danger" link @click="router.push('/recruitment/apply')">查看全部 →</el-button>
+                <el-button type="danger" link @click="navigateTo('/recruitment/apply')">查看全部 →</el-button>
               </el-badge>
             </div>
           </template>
@@ -259,7 +259,7 @@
               v-for="item in exceptionApplies"
               :key="item.applyId"
               class="mini-item exception-item"
-              @click="router.push('/recruitment/apply')"
+              @click="navigateTo('/recruitment/apply')"
             >
               <div class="mini-info">
                 <span class="mini-title">{{ item.jobName }}</span>
@@ -280,7 +280,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import * as echarts from 'echarts';
 import {
   Refresh,
@@ -319,10 +319,15 @@ import type {
   HotJobVO,
   ExceptionApplyVO,
 } from '@/api/recruitment';
-import { ElMessage } from 'element-plus';
 import { formatDate as formatDateUtil } from '@/utils';
 
 const router = useRouter();
+const route = useRoute();
+
+function navigateTo(path: string) {
+  if (route.path === path) return;
+  router.push(path);
+}
 
 // ---------- refs ----------
 const trendChartRef = ref<HTMLElement | null>(null);

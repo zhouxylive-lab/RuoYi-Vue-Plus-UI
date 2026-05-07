@@ -133,7 +133,10 @@ export const usePermissionStore = defineStore('permission', () => {
 export const filterDynamicRoutes = (routes: RouteRecordRaw[]) => {
   const res: RouteRecordRaw[] = [];
   routes.forEach((route) => {
-    if (route.permissions) {
+    // 如果路由没有权限配置，则直接添加（如招聘模块）
+    if (!route.permissions && !route.roles) {
+      res.push(route);
+    } else if (route.permissions) {
       if (auth.hasPermiOr(route.permissions)) {
         res.push(route);
       }

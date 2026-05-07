@@ -19,7 +19,7 @@
     <el-row :gutter="16" class="mb-4">
       <!-- 企业维度 -->
       <el-col :xs="24" :sm="12" :md="6">
-        <el-card shadow="hover" class="kpi-card" @click="router.push('/recruitment/company')">
+        <el-card shadow="hover" class="kpi-card" @click="navigateTo('/recruitment/company')">
           <div class="kpi-header">
             <span class="kpi-label">企业总数</span>
             <el-tag type="warning" size="small" effect="plain" v-if="overview.pendingCompanies > 0">
@@ -39,7 +39,7 @@
       </el-col>
 
       <el-col :xs="24" :sm="12" :md="6">
-        <el-card shadow="hover" class="kpi-card" @click="router.push('/recruitment/job')">
+        <el-card shadow="hover" class="kpi-card" @click="navigateTo('/recruitment/job')">
           <div class="kpi-header">
             <span class="kpi-label">职位总数</span>
             <el-tag type="warning" size="small" effect="plain" v-if="overview.pendingJobs > 0">
@@ -60,7 +60,7 @@
 
       <!-- 求职者维度 -->
       <el-col :xs="24" :sm="12" :md="6">
-        <el-card shadow="hover" class="kpi-card" @click="router.push('/recruitment/apply')">
+        <el-card shadow="hover" class="kpi-card" @click="navigateTo('/recruitment/apply')">
           <div class="kpi-header">
             <span class="kpi-label">投递总数</span>
           </div>
@@ -77,7 +77,7 @@
       </el-col>
 
       <el-col :xs="24" :sm="12" :md="6">
-        <el-card shadow="hover" class="kpi-card" @click="router.push('/recruitment/task')">
+        <el-card shadow="hover" class="kpi-card" @click="navigateTo('/recruitment/task')">
           <div class="kpi-header">
             <span class="kpi-label">任务总数</span>
           </div>
@@ -97,7 +97,7 @@
     <!-- 禁言统计小卡片 -->
     <el-row :gutter="16" class="mb-4">
       <el-col :xs="12" :sm="6">
-        <el-card shadow="hover" class="kpi-card" @click="router.push('/recruitment/company?isSilenced=1')">
+        <el-card shadow="hover" class="kpi-card" @click="navigateTo('/recruitment/company?isSilenced=1')">
           <div class="kpi-header">
             <span class="kpi-label">被禁言企业</span>
             <el-tag type="danger" size="small" v-if="overview.silencedCompanies > 0">
@@ -108,7 +108,7 @@
         </el-card>
       </el-col>
       <el-col :xs="12" :sm="6">
-        <el-card shadow="hover" class="kpi-card" @click="router.push('/recruitment/user')">
+        <el-card shadow="hover" class="kpi-card" @click="navigateTo('/recruitment/user')">
           <div class="kpi-header">
             <span class="kpi-label">被禁言求职者</span>
             <el-tag type="danger" size="small" v-if="overview.silencedUsers > 0">
@@ -190,7 +190,7 @@
           <template #header>
             <div class="card-header">
               <span>最近发布职位</span>
-              <el-button type="primary" link @click="router.push('/recruitment/job')">查看更多</el-button>
+              <el-button type="primary" link @click="navigateTo('/recruitment/job')">查看更多</el-button>
             </div>
           </template>
           <el-table :data="recentJobs" stripe size="small" :show-header="true">
@@ -212,7 +212,7 @@
           <template #header>
             <div class="card-header">
               <span>最新投递</span>
-              <el-button type="primary" link @click="router.push('/recruitment/apply')">查看更多</el-button>
+              <el-button type="primary" link @click="navigateTo('/recruitment/apply')">查看更多</el-button>
             </div>
           </template>
           <el-table :data="recentApplies" stripe size="small">
@@ -241,7 +241,7 @@
             <div class="card-header">
               <span>异常投递</span>
               <el-badge :value="exceptionApplies.length" type="danger" :hidden="exceptionApplies.length === 0">
-                <el-button type="primary" link @click="router.push('/recruitment/apply?exception=1')">查看更多</el-button>
+                <el-button type="primary" link @click="navigateTo('/recruitment/apply?exception=1')">查看更多</el-button>
               </el-badge>
             </div>
           </template>
@@ -274,7 +274,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import * as echarts from 'echarts';
 import {
   Refresh,
@@ -307,6 +307,12 @@ import { ElMessage } from 'element-plus';
 import { formatDate as formatDateUtil } from '@/utils/ruoyi';
 
 const router = useRouter();
+const route = useRoute();
+
+function navigateTo(path: string) {
+  if (route.path === path) return;
+  router.push(path);
+}
 
 // ---------- refs ----------
 const trendChartRef = ref<HTMLElement | null>(null);
