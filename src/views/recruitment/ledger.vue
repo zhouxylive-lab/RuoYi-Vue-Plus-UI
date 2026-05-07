@@ -55,7 +55,7 @@
       </template>
 
       <el-table v-loading="loading" :data="tableData" border stripe>
-        <el-table-column label="台账ID" prop="ledgerId" width="80" align="center" />
+        <el-table-column label="台账ID" prop="ledgerId" width="200" align="center" />
         <el-table-column label="订单号" prop="orderNo" min-width="200" show-overflow-tooltip />
         <el-table-column label="企业" prop="companyName" min-width="150" />
         <el-table-column label="用户" min-width="120">
@@ -72,7 +72,9 @@
         <el-table-column label="创建时间" prop="createTime" width="160" align="center" />
         <el-table-column label="操作" width="80" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>

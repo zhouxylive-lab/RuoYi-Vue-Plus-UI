@@ -85,7 +85,7 @@
       </template>
 
       <el-table v-loading="loading" :data="tableData" border stripe>
-        <el-table-column label="企业ID" prop="companyId" width="80" align="center" />
+        <el-table-column label="企业ID" prop="companyId" width="200" align="center" />
         <el-table-column label="企业信息" min-width="200">
           <template #default="{ row }">
             <div class="company-info">
@@ -134,26 +134,28 @@
         <el-table-column label="注册时间" prop="createTime" width="160" align="center" />
         <el-table-column label="操作" width="200" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
-            <el-dropdown trigger="click">
-              <span class="el-dropdown-link">
-                <el-button link type="primary">管理<el-icon class="el-icon--right"><arrow-down /></el-icon></el-button>
-              </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item v-if="row.status === '0'" icon="CircleCheck" @click="handleAudit(row, '1')">审核通过</el-dropdown-item>
-                  <el-dropdown-item v-if="row.status === '0'" icon="Close" @click="handleAudit(row, '2')">审核拒绝</el-dropdown-item>
-                  <el-dropdown-item v-if="row.status === '1'" icon="Lock" @click="handleStatusChange(row, '2')">禁用企业</el-dropdown-item>
-                  <el-dropdown-item v-if="row.status === '2'" icon="Unlock" @click="handleStatusChange(row, '1')">启用企业</el-dropdown-item>
-                  <el-dropdown-item divided icon="MuteNotification" @click="handleSilence(row)" v-if="row.isSilenced !== '1'">
-                    禁言企业
-                  </el-dropdown-item>
-                  <el-dropdown-item icon="MuteNotification" @click="handleUnsilence(row)" v-if="row.isSilenced === '1'">
-                    取消禁言
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
+              <el-dropdown trigger="click">
+                <span class="el-dropdown-link">
+                  <el-button link type="primary">管理<el-icon class="el-icon--right"><arrow-down /></el-icon></el-button>
+                </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item v-if="row.status === '0'" icon="CircleCheck" @click="handleAudit(row, '1')">审核通过</el-dropdown-item>
+                    <el-dropdown-item v-if="row.status === '0'" icon="Close" @click="handleAudit(row, '2')">审核拒绝</el-dropdown-item>
+                    <el-dropdown-item v-if="row.status === '1'" icon="Lock" @click="handleStatusChange(row, '2')">禁用企业</el-dropdown-item>
+                    <el-dropdown-item v-if="row.status === '2'" icon="Unlock" @click="handleStatusChange(row, '1')">启用企业</el-dropdown-item>
+                    <el-dropdown-item divided icon="MuteNotification" @click="handleSilence(row)" v-if="row.isSilenced !== '1'">
+                      禁言企业
+                    </el-dropdown-item>
+                    <el-dropdown-item icon="MuteNotification" @click="handleUnsilence(row)" v-if="row.isSilenced === '1'">
+                      取消禁言
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </div>
           </template>
         </el-table-column>
       </el-table>

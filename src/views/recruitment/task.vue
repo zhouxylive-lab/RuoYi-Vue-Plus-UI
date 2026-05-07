@@ -82,7 +82,7 @@
     <!-- ========== 数据表格 ========== -->
     <el-card shadow="hover">
       <el-table v-loading="loading" :data="tableData" border stripe>
-        <el-table-column label="任务ID" prop="taskId" width="80" align="center" />
+        <el-table-column label="任务ID" prop="taskId" width="200" align="center" />
         <el-table-column label="求职者信息" min-width="150">
           <template #default="{ row }">
             <div class="user-cell">
@@ -118,9 +118,11 @@
         </el-table-column>
         <el-table-column label="操作" width="160" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
-            <el-button v-if="row.status === '1'" link type="success" icon="CircleCheck" @click="handleVerify(row, '2')">通过</el-button>
-            <el-button v-if="row.status === '1'" link type="danger" icon="Close" @click="handleVerify(row, '3')">拒绝</el-button>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: wrap;">
+              <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
+              <el-button v-if="row.status === '1'" link type="success" icon="CircleCheck" @click="handleVerify(row, '2')">通过</el-button>
+              <el-button v-if="row.status === '1'" link type="danger" icon="Close" @click="handleVerify(row, '3')">拒绝</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>

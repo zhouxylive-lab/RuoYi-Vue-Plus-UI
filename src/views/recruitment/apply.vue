@@ -90,7 +90,7 @@
     <!-- ========== 数据表格 ========== -->
     <el-card shadow="hover">
       <el-table v-loading="loading" :data="tableData" border stripe>
-        <el-table-column label="投递ID" prop="applyId" width="80" align="center" />
+        <el-table-column label="投递ID" prop="applyId" width="200" align="center" />
         <el-table-column label="求职者信息" min-width="160">
           <template #default="{ row }">
             <div class="user-cell">
@@ -138,7 +138,9 @@
         </el-table-column>
         <el-table-column label="操作" width="80" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>

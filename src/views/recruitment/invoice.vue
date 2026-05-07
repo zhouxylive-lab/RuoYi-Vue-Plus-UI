@@ -67,7 +67,7 @@
       </template>
 
       <el-table v-loading="loading" :data="tableData" border stripe>
-        <el-table-column label="发票ID" prop="invoiceId" width="80" align="center" />
+        <el-table-column label="发票ID" prop="invoiceId" width="200" align="center" />
         <el-table-column label="企业" prop="companyName" min-width="150" />
         <el-table-column label="台账ID" prop="ledgerId" width="100" align="center" />
         <el-table-column label="状态" width="100" align="center">
@@ -88,18 +88,20 @@
         <el-table-column label="备注" prop="remark" min-width="150" show-overflow-tooltip />
         <el-table-column label="操作" width="150" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
-            <el-dropdown v-if="row.status === '0'" trigger="click">
-              <span class="el-dropdown-link">
-                <el-button link type="primary">更多<el-icon class="el-icon--right"><arrow-down /></el-icon></el-button>
-              </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item icon="Tickets" @click="handleStatusChange(row, '1')">标记已开票</el-dropdown-item>
-                  <el-dropdown-item icon="Delete" @click="handleStatusChange(row, '2')">标记已作废</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+              <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
+              <el-dropdown v-if="row.status === '0'" trigger="click">
+                <span class="el-dropdown-link">
+                  <el-button link type="primary">更多<el-icon class="el-icon--right"><arrow-down /></el-icon></el-button>
+                </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item icon="Tickets" @click="handleStatusChange(row, '1')">标记已开票</el-dropdown-item>
+                    <el-dropdown-item icon="Delete" @click="handleStatusChange(row, '2')">标记已作废</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </div>
           </template>
         </el-table-column>
       </el-table>

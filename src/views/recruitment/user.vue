@@ -208,13 +208,15 @@
         <!-- 操作 -->
         <el-table-column label="操作" width="150" fixed="right" align="center">
           <template #default="{ row }">
-            <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
-            <el-button link type="danger" @click="handleSilence(row)" v-if="row.isRecruitmentSilenced !== '1'">
-              禁言
-            </el-button>
-            <el-button link type="success" @click="handleUnsilence(row)" v-else>
-              解禁
-            </el-button>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 4px; flex-wrap: wrap;">
+              <el-button link type="primary" icon="View" @click="handleDetail(row)">详情</el-button>
+              <el-button link type="danger" @click="handleSilence(row)" v-if="row.isRecruitmentSilenced !== '1'">
+                禁言
+              </el-button>
+              <el-button link type="success" @click="handleUnsilence(row)" v-else>
+                解禁
+              </el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
