@@ -103,7 +103,9 @@
       </template>
 
       <el-table v-loading="loading" :data="tableData" border stripe>
-        <!-- 用户基础信息 -->
+        <!-- 用户ID -->
+        <el-table-column label="用户ID" prop="userId" width="90" align="center" />
+
         <el-table-column label="用户信息" min-width="200">
           <template #default="{ row }">
             <div class="user-info">
@@ -397,12 +399,18 @@ async function loadData() {
       phonenumber: queryParams.phonenumber || undefined,
       isRecruitmentSilenced: queryParams.isSilenced || undefined,
     });
-    // 拦截器返回 res.data，res 已是 { code, data: { total, rows }, msg }
-    tableData.value = res.data?.rows || [];
-    total.value = res.data?.total || 0;
-  } catch {
+    // 拦截器 resolve(res.data) 返回 R.body：
+    // 后端实际返回 { code, msg, data: { total, rows, code, msg } }
+    // → res = { code, msg, data: { total, rows, code, msg } }
+    const rows = (res as any).rows ?? (res as any).data?.rows ?? [];
+    const totalCount = (res as any).total ?? (res as any).data?.total ?? 0;
+    tableData.value = Array.isArray(rows) ? rows : [];
+    total.value = typeof totalCount === 'number' ? totalCount : 0;
+    console.log('[求职者管理] loadData 返回:', res);
+  } catch (e) {
     tableData.value = [];
     total.value = 0;
+    console.error('[求职者管理] loadData 异常:', e);
   } finally {
     loading.value = false;
   }
@@ -411,8 +419,8 @@ async function loadData() {
 async function loadStatistics() {
   try {
     const res = await statisticsUser();
-    // 拦截器返回 res.data，故 res.data 已是 { code, data: UserStatisticsVO, msg }
-    Object.assign(stats, res.data?.data || {});
+    // res = R.data: UserStatisticsVO { totalCount, normalCount, ... }
+    Object.assign(stats, res.data || {});
   } catch {
     // silent
   }
