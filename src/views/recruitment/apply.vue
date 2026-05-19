@@ -83,6 +83,7 @@
         <el-form-item>
           <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
           <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+          <el-button type="success" plain icon="Download" @click="handleExport">导出</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -94,7 +95,7 @@
         <el-table-column label="求职者信息" min-width="160">
           <template #default="{ row }">
             <div class="user-cell">
-              <el-avatar :size="34" :src="row.avatar" style="background: #409EFF; flex-shrink: 0">
+              <el-avatar :size="34" :src="row.avatarUrl || row.avatar" style="background: #409EFF; flex-shrink: 0">
                 {{ (row.userName || 'U').charAt(0) }}
               </el-avatar>
               <div class="user-detail">
@@ -132,7 +133,7 @@
         </el-table-column>
         <el-table-column label="联系方式" width="80" align="center">
           <template #default="{ row }">
-            <el-tag v-if="row.exchanged" type="success" size="small">已交换</el-tag>
+            <el-tag v-if="row.exchanged === true || row.exchanged === '1'" type="success" size="small">已交换</el-tag>
             <span v-else class="text-muted">-</span>
           </template>
         </el-table-column>
@@ -168,6 +169,8 @@
         <el-descriptions-item label="联系电话">{{ currentApply.phonenumber || '-' }}</el-descriptions-item>
         <el-descriptions-item label="岗位名称" :span="2">{{ currentApply.jobName || '-' }}</el-descriptions-item>
         <el-descriptions-item label="企业名称">{{ currentApply.companyName || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="企业联系人">{{ currentApply.contactPerson || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="企业电话">{{ currentApply.contactPhone || '-' }}</el-descriptions-item>
         <el-descriptions-item label="薪资">{{ currentApply.salary || '-' }}</el-descriptions-item>
         <el-descriptions-item label="投递时间">{{ currentApply.applyTime }}</el-descriptions-item>
         <el-descriptions-item label="是否已读">
@@ -188,6 +191,12 @@
           <div style="white-space: pre-wrap">{{ currentApply.summary }}</div>
         </el-descriptions-item>
         <el-descriptions-item label="备注" :span="2">{{ currentApply.message || '暂无' }}</el-descriptions-item>
+        <el-descriptions-item label="企业联系方式" :span="2" v-if="currentApply.recruiterContact">
+          {{ currentApply.recruiterContact }}
+        </el-descriptions-item>
+        <el-descriptions-item label="求职者联系方式" :span="2" v-if="currentApply.jobSeekerContact">
+          {{ currentApply.jobSeekerContact }}
+        </el-descriptions-item>
       </el-descriptions>
       <template #footer>
         <el-button @click="detailVisible = false">关闭</el-button>
@@ -201,6 +210,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { Refresh } from '@element-plus/icons-vue';
 import { listApply, getApplyStatistics, getApply } from '@/api/recruitment';
+import { download } from '@/utils/request';
 
 const loading = ref(false);
 const total = ref(0);
@@ -274,7 +284,6 @@ async function handleDetail(row: any) {
     const res = await getApply(row.applyId);
     currentApply.value = res.data;
     detailVisible.value = true;
-    loadData();
   } catch (error) {
     ElMessage.error('获取投递详情失败');
   }
@@ -284,6 +293,10 @@ onMounted(() => {
   loadData();
   loadStatistics();
 });
+
+function handleExport() {
+  download('/admin/recruitment/apply/export', queryParams, `投递记录_${new Date().getTime()}.xlsx`);
+}
 </script>
 
 <style scoped>

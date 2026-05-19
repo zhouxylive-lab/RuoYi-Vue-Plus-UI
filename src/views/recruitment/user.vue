@@ -98,7 +98,10 @@
       <template #header>
         <div class="card-header">
           <span class="header-title">求职者列表</span>
-          <el-button type="primary" plain icon="Refresh" @click="loadData" :loading="loading">刷新</el-button>
+          <div style="display: flex; gap: 8px;">
+            <el-button type="success" plain icon="Download" @click="handleExport">导出</el-button>
+            <el-button type="primary" plain icon="Refresh" @click="loadData" :loading="loading">刷新</el-button>
+          </div>
         </div>
       </template>
 
@@ -330,6 +333,7 @@ import {
   unsilenceUser,
   type RecruitmentUserVO,
 } from '@/api/recruitment';
+import { download } from '@/utils/request';
 
 const loading = ref(false);
 const total = ref(0);
@@ -500,6 +504,14 @@ onMounted(() => {
   loadData();
   loadStatistics();
 });
+
+function handleExport() {
+  download('/admin/recruitment/user/export', {
+    userName: queryParams.userName || undefined,
+    phonenumber: queryParams.phonenumber || undefined,
+    isRecruitmentSilenced: queryParams.isSilenced || undefined,
+  }, `求职者数据_${new Date().getTime()}.xlsx`);
+}
 </script>
 
 <style scoped>

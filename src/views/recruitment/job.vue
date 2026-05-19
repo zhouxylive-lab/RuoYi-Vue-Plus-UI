@@ -74,6 +74,9 @@
           <el-col :span="1.5">
             <el-button type="primary" plain icon="Refresh" @click="loadData">刷新</el-button>
           </el-col>
+          <el-col :span="1.5">
+            <el-button type="success" plain icon="Download" @click="handleExport">导出</el-button>
+          </el-col>
         </el-row>
       </template>
 
@@ -210,14 +213,8 @@
 <script setup name="JobManagement" lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import {
-  listJob,
-  getJobStatistics,
-  getJob,
-  auditJob,
-  changeJobStatus,
-  delJob
-} from '@/api/recruitment';
+import { listJob, getJobStatistics, getJob, auditJob, changeJobStatus, delJob } from '@/api/recruitment';
+import { download } from '@/utils/request';
 
 const loading = ref(false);
 const total = ref(0);
@@ -357,6 +354,10 @@ onMounted(() => {
   loadData();
   loadStatistics();
 });
+
+function handleExport() {
+  download('/admin/recruitment/job/export', queryParams, `岗位数据_${new Date().getTime()}.xlsx`);
+}
 </script>
 
 <style scoped>

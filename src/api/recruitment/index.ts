@@ -81,6 +81,20 @@ export interface ApplyVO {
   isRead?: string;
   message?: string;
   createTime?: string;
+  avatar?: string;
+  avatarUrl?: string;
+  exchanged?: boolean;
+  contactPerson?: string;
+  contactPhone?: string;
+  recruiterContact?: string;
+  jobSeekerContact?: string;
+  realName?: string;
+  education?: string;
+  workYears?: string;
+  city?: string;
+  expectPosition?: string;
+  skills?: string;
+  summary?: string;
 }
 
 // ========== 任务相关 ==========
@@ -275,6 +289,8 @@ export interface ApplyQuery {
   userId?: number;
   userName?: string;
   status?: string;
+  companyName?: string;
+  isRead?: string;
 }
 
 export interface TaskQuery {

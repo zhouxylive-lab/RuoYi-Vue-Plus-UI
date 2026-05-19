@@ -81,6 +81,9 @@
           <el-col :span="1.5">
             <el-button type="primary" plain icon="Refresh" @click="loadData">刷新</el-button>
           </el-col>
+          <el-col :span="1.5">
+            <el-button type="success" plain icon="Download" @click="handleExport">导出</el-button>
+          </el-col>
         </el-row>
       </template>
 
@@ -253,15 +256,9 @@
 <script setup name="CompanyManagement" lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import {
-  listCompany,
-  getCompanyStatistics,
-  getCompany,
-  auditCompany,
-  changeCompanyStatus,
-  silenceCompany,
-  unsilenceCompany,
-} from '@/api/recruitment';
+import { Download } from '@element-plus/icons-vue';
+import { listCompany, getCompanyStatistics, getCompany, auditCompany, changeCompanyStatus, silenceCompany, unsilenceCompany } from '@/api/recruitment';
+import { download } from '@/utils/request';
 
 const loading = ref(false);
 const total = ref(0);
@@ -430,6 +427,10 @@ onMounted(() => {
   loadData();
   loadStatistics();
 });
+
+function handleExport() {
+  download('/admin/recruitment/company/exportData', queryParams, `企业数据_${new Date().getTime()}.xlsx`);
+}
 </script>
 
 <style scoped>
