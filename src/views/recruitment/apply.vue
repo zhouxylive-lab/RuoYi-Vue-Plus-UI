@@ -155,51 +155,147 @@
       />
     </el-card>
 
-    <!-- ========== 投递详情对话框 ========== -->
-    <el-dialog v-model="detailVisible" title="投递详情" width="720px" append-to-body>
-      <el-descriptions :column="2" border v-if="currentApply">
-        <el-descriptions-item label="投递ID">{{ currentApply.applyId }}</el-descriptions-item>
-        <el-descriptions-item label="状态">
-          <el-tag v-if="currentApply.status === '0'" type="info">已投递</el-tag>
-          <el-tag v-else-if="currentApply.status === '1'" type="primary">面试邀请</el-tag>
-          <el-tag v-else-if="currentApply.status === '2'" type="success">已录用</el-tag>
-          <el-tag v-else type="danger">已拒绝</el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="求职者">{{ currentApply.userName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="联系电话">{{ currentApply.phonenumber || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="岗位名称" :span="2">{{ currentApply.jobName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="企业名称">{{ currentApply.companyName || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="企业联系人">{{ currentApply.contactPerson || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="企业电话">{{ currentApply.contactPhone || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="薪资">{{ currentApply.salary || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="投递时间">{{ currentApply.applyTime }}</el-descriptions-item>
-        <el-descriptions-item label="是否已读">
-          <el-tag v-if="currentApply.isRead === '1'" type="success">已读</el-tag>
-          <el-tag v-else type="warning">未读</el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="创建时间">{{ currentApply.createTime }}</el-descriptions-item>
-        <!-- 简历快照 -->
-        <el-descriptions-item label="真实姓名" v-if="currentApply.realName">{{ currentApply.realName }}</el-descriptions-item>
-        <el-descriptions-item label="学历" v-if="currentApply.education">{{ currentApply.education }}</el-descriptions-item>
-        <el-descriptions-item label="工作年限" v-if="currentApply.workYears">{{ currentApply.workYears }} 年</el-descriptions-item>
-        <el-descriptions-item label="所在城市" v-if="currentApply.city">{{ currentApply.city }}</el-descriptions-item>
-        <el-descriptions-item label="期望职位" :span="2" v-if="currentApply.expectPosition">{{ currentApply.expectPosition }}</el-descriptions-item>
-        <el-descriptions-item label="技能标签" :span="2" v-if="currentApply.skills">
-          <el-tag v-for="skill in (currentApply.skills || '').split(',')" :key="skill" size="small" style="margin-right: 4px">{{ skill }}</el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="个人简介" :span="2" v-if="currentApply.summary">
-          <div style="white-space: pre-wrap">{{ currentApply.summary }}</div>
-        </el-descriptions-item>
-        <el-descriptions-item label="备注" :span="2">{{ currentApply.message || '暂无' }}</el-descriptions-item>
-        <el-descriptions-item label="企业联系方式" :span="2" v-if="currentApply.recruiterContact">
-          {{ currentApply.recruiterContact }}
-        </el-descriptions-item>
-        <el-descriptions-item label="求职者联系方式" :span="2" v-if="currentApply.jobSeekerContact">
-          {{ currentApply.jobSeekerContact }}
-        </el-descriptions-item>
-      </el-descriptions>
+    <!-- ========== 投递详情对话框 (重新设计版) ========== -->
+    <el-dialog 
+      v-model="detailVisible" 
+      title="投递申请详情" 
+      width="820px" 
+      append-to-body 
+      class="custom-detail-dialog"
+    >
+      <div v-if="currentApply" class="detail-container">
+        <!-- 头部概览 -->
+        <div class="header-section">
+          <div class="header-left">
+            <el-avatar :size="70" :src="currentApply.avatarUrl || currentApply.avatar" class="user-avatar">
+              {{ (currentApply.userName || 'U').charAt(0) }}
+            </el-avatar>
+            <div class="user-info">
+              <div class="top">
+                <span class="name">{{ currentApply.realName || currentApply.userName }}</span>
+                <el-tag v-if="currentApply.education" size="small" effect="plain" class="edu-tag">
+                  {{ currentApply.education }}
+                </el-tag>
+              </div>
+              <div class="job-title">{{ currentApply.jobName }}</div>
+              <div class="company-sub">{{ currentApply.companyName }}</div>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="status-badge" :class="'status-' + currentApply.status">
+               <div class="status-dot"></div>
+               {{ getStatusLabel(currentApply.status) }}
+            </div>
+            <div class="time-label">{{ currentApply.applyTime }} 投递</div>
+          </div>
+        </div>
+
+        <el-divider />
+
+        <!-- 内容区域 -->
+        <div class="content-section">
+          <el-row :gutter="24">
+            <!-- 左侧：核心履历 -->
+            <el-col :span="16">
+              <div class="detail-block">
+                <div class="block-title"><el-icon><CollectionTag /></el-icon> 个人背景</div>
+                <div class="grid-info">
+                  <div class="grid-item">
+                    <span class="label">工作年限</span>
+                    <span class="value">{{ currentApply.workYears ? currentApply.workYears + ' 年' : '不可知' }}</span>
+                  </div>
+                  <div class="grid-item">
+                    <span class="label">求职城市</span>
+                    <span class="value">{{ currentApply.city || '不限' }}</span>
+                  </div>
+                  <div class="grid-item">
+                    <span class="label">期望职位</span>
+                    <span class="value">{{ currentApply.expectPosition || '暂无' }}</span>
+                  </div>
+                  <div class="grid-item">
+                    <span class="label">手机号码</span>
+                    <span class="value">{{ currentApply.phonenumber || '-' }}</span>
+                  </div>
+                </div>
+
+                <div class="block-title mt-6"><el-icon><View /></el-icon> 技能评价</div>
+                <div class="skill-tags">
+                  <el-tag 
+                    v-for="item in (currentApply.skills || '').split(',').filter(s => s)" 
+                    :key="item" 
+                    class="skill-tag"
+                    effect="light"
+                    round
+                  >
+                    {{ item }}
+                  </el-tag>
+                  <span v-if="!(currentApply.skills)" class="empty-text">暂无技能标签</span>
+                </div>
+
+                <div class="block-title mt-6"><el-icon><User /></el-icon> 个人简介</div>
+                <div class="text-content">
+                  {{ currentApply.summary || '该求职者很神秘，什么都没写~' }}
+                </div>
+
+                <div class="block-title mt-6"><el-icon><ChatLineRound /></el-icon> 投递备注</div>
+                <div class="message-box">
+                  {{ currentApply.message || '无附加备注信息' }}
+                </div>
+              </div>
+            </el-col>
+
+            <!-- 右侧：岗位与流程 -->
+            <el-col :span="8">
+              <div class="sidebar-block">
+                <div class="block-title">岗位信息</div>
+                <div class="info-card">
+                  <div class="salary-box">{{ currentApply.salary || '薪资面议' }}</div>
+                  <div class="company-detail">
+                    <p><el-icon><OfficeBuilding /></el-icon> {{ currentApply.companyName }}</p>
+                    <p><el-icon><User /></el-icon> {{ currentApply.contactPerson || '-' }}</p>
+                    <p><el-icon><Phone /></el-icon> {{ currentApply.contactPhone || '-' }}</p>
+                  </div>
+                </div>
+
+                <div class="block-title mt-6">流转信息</div>
+                <ul class="meta-info">
+                  <li>
+                    <span class="label">投递ID</span>
+                    <span class="value">#{{ currentApply.applyId }}</span>
+                  </li>
+                  <li>
+                    <span class="label">已读状态</span>
+                    <span class="value">
+                      <el-tag size="small" :type="currentApply.isRead === '1' ? 'success' : 'warning'">
+                         {{ currentApply.isRead === '1' ? '已阅' : '未阅' }}
+                      </el-tag>
+                    </span>
+                  </li>
+                  <li>
+                    <span class="label">投递时间</span>
+                    <span class="value">{{ currentApply.createTime ? currentApply.createTime.split(' ')[0] : '-' }}</span>
+                  </li>
+                </ul>
+
+                <div v-if="currentApply.recruiterContact || currentApply.jobSeekerContact" class="contact-memo mt-6">
+                  <div class="memo-title">联系凭证</div>
+                  <div v-if="currentApply.recruiterContact" class="memo-content">
+                    B端: {{ currentApply.recruiterContact }}
+                  </div>
+                  <div v-if="currentApply.jobSeekerContact" class="memo-content" style="margin-top: 4px">
+                    C端: {{ currentApply.jobSeekerContact }}
+                  </div>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
       <template #footer>
-        <el-button @click="detailVisible = false">关闭</el-button>
+        <div class="dialog-footer">
+          <el-button @click="detailVisible = false">关闭窗口</el-button>
+          <el-button type="primary" @click="handlePrint">打印资料</el-button>
+        </div>
       </template>
     </el-dialog>
   </div>
@@ -208,7 +304,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
-import { Refresh } from '@element-plus/icons-vue';
+import { Refresh, User, Phone, View, CollectionTag, OfficeBuilding, ChatLineRound } from '@element-plus/icons-vue';
 import { listApply, getApplyStatistics, getApply } from '@/api/recruitment';
 import { download } from '@/utils/request';
 
@@ -297,6 +393,20 @@ onMounted(() => {
 function handleExport() {
   download('/admin/recruitment/apply/export', queryParams, `投递记录_${new Date().getTime()}.xlsx`);
 }
+
+function getStatusLabel(status: string) {
+  const map: any = {
+    '0': '已投递',
+    '1': '面试邀请',
+    '2': '已录用',
+    '3': '已拒绝'
+  };
+  return map[status] || '未知';
+}
+
+function handlePrint() {
+  window.print();
+}
 </script>
 
 <style scoped>
@@ -354,5 +464,262 @@ function handleExport() {
 
 @media (max-width: 768px) {
   .stat-value { font-size: 20px; }
+}
+
+/* 对话框重构样式 */
+:deep(.custom-detail-dialog) {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+:deep(.custom-detail-dialog .el-dialog__header) {
+  margin-right: 0;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+:deep(.custom-detail-dialog .el-dialog__body) {
+  padding: 24px;
+}
+
+.detail-container {
+  padding: 0;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-avatar {
+  border: 4px solid #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  background: #f0f2f5;
+  color: #409eff;
+  font-weight: bold;
+}
+
+.user-info .top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.user-info .name {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.user-info .edu-tag {
+  background: #f0f7ff;
+  border-color: #d1e9ff;
+  color: #409eff;
+}
+
+.user-info .job-title {
+  font-size: 16px;
+  color: #409eff;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.user-info .company-sub {
+  font-size: 13px;
+  color: #909399;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.status-0 { background: #f4f4f5; color: #909399; }
+.status-1 { background: #ecf5ff; color: #409eff; }
+.status-2 { background: #f0f9eb; color: #67c23a; }
+.status-3 { background: #fef0f0; color: #f56c6c; }
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.time-label {
+  text-align: right;
+  font-size: 12px;
+  color: #c0c4cc;
+  margin-top: 6px;
+}
+
+.block-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #303133;
+  margin-bottom: 16px;
+}
+
+.block-title .el-icon {
+  color: #409eff;
+}
+
+/* 网格信息 */
+.grid-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  background: #f8f9fb;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.grid-item .label {
+  font-size: 12px;
+  color: #909399;
+}
+
+.grid-item .value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #303133;
+}
+
+/* 技能与文本 */
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  border: none;
+  background: #f0f2f5;
+  color: #606266;
+}
+
+.text-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #606266;
+  background: #fff;
+  padding: 16px;
+  border: 1px dashed #dcdfe6;
+  border-radius: 8px;
+  white-space: pre-wrap;
+}
+
+.message-box {
+  background: #fff8eb;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #e6a23c;
+  line-height: 1.5;
+}
+
+.empty-text {
+  font-size: 13px;
+  color: #c0c4cc;
+  font-style: italic;
+}
+
+/* 侧边栏 */
+.sidebar-block {
+  background: #fff;
+}
+
+.info-card {
+  background: linear-gradient(135deg, #409eff 0%, #3a8ee6 100%);
+  padding: 20px;
+  border-radius: 14px;
+  color: #fff;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 20px rgba(64, 158, 255, 0.2);
+}
+
+.salary-box {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.company-detail p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  margin: 10px 0;
+  opacity: 0.95;
+}
+
+.meta-info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.meta-info li {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f2f6fc;
+  font-size: 13px;
+}
+
+.meta-info .label { color: #909399; }
+.meta-info .value { font-weight: 500; color: #303133; }
+
+.contact-memo {
+  background: #f0f9eb;
+  padding: 14px;
+  border-radius: 10px;
+}
+
+.memo-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #67c23a;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.memo-content {
+  font-size: 13px;
+  color: #529b2e;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.mt-6 { margin-top: 28px; }
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
 }
 </style>

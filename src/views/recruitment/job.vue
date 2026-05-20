@@ -53,6 +53,18 @@
             <el-option label="项目制" value="3" />
           </el-select>
         </el-form-item>
+        <el-form-item label="推荐" prop="isRecommend">
+          <el-select v-model="queryParams.isRecommend" placeholder="全部" clearable style="width: 100px">
+            <el-option label="是" value="1" />
+            <el-option label="否" value="0" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="热门" prop="isHot">
+          <el-select v-model="queryParams.isHot" placeholder="全部" clearable style="width: 100px">
+            <el-option label="是" value="1" />
+            <el-option label="否" value="0" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 120px">
             <el-option label="待审核" value="0" />
@@ -108,6 +120,26 @@
         <el-table-column label="投递人数" prop="applyCount" width="100" align="center">
           <template #default="{ row }">
             <el-tag type="primary">{{ row.applyCount || 0 }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="推荐" width="80" align="center">
+          <template #default="{ row }">
+            <el-switch
+              v-model="row.isRecommend"
+              active-value="1"
+              inactive-value="0"
+              @change="handleRecommendChange(row)"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="热门" width="80" align="center">
+          <template #default="{ row }">
+            <el-switch
+              v-model="row.isHot"
+              active-value="1"
+              inactive-value="0"
+              @change="handleHotChange(row)"
+            />
           </template>
         </el-table-column>
         <el-table-column label="状态" width="100" align="center">
@@ -213,7 +245,7 @@
 <script setup name="JobManagement" lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { listJob, getJobStatistics, getJob, auditJob, changeJobStatus, delJob } from '@/api/recruitment';
+import { listJob, getJobStatistics, getJob, auditJob, changeJobStatus, delJob, updateJob } from '@/api/recruitment';
 import { download } from '@/utils/request';
 
 const loading = ref(false);
@@ -231,7 +263,9 @@ const queryParams = reactive({
   jobName: '',
   jobType: '',
   status: '',
-  companyName: ''
+  companyName: '',
+  isRecommend: '',
+  isHot: ''
 });
 
 const statistics = reactive({
@@ -281,7 +315,31 @@ function resetQuery() {
   queryParams.jobType = '';
   queryParams.status = '';
   queryParams.companyName = '';
+  queryParams.isRecommend = '';
+  queryParams.isHot = '';
   loadData();
+}
+
+async function handleRecommendChange(row: any) {
+  const text = row.isRecommend === '1' ? '推荐' : '取消推荐';
+  try {
+    await updateJob({ jobId: row.jobId, isRecommend: row.isRecommend });
+    ElMessage.success(`${text}成功`);
+  } catch (err) {
+    row.isRecommend = row.isRecommend === '1' ? '0' : '1';
+    ElMessage.error(`${text}失败`);
+  }
+}
+
+async function handleHotChange(row: any) {
+  const text = row.isHot === '1' ? '设为热门' : '取消热门';
+  try {
+    await updateJob({ jobId: row.jobId, isHot: row.isHot });
+    ElMessage.success(`${text}成功`);
+  } catch (err) {
+    row.isHot = row.isHot === '1' ? '0' : '1';
+    ElMessage.error(`${text}失败`);
+  }
 }
 
 async function handleDetail(row: any) {

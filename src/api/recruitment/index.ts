@@ -53,6 +53,8 @@ export interface JobVO {
   statusName?: string;
   createTime?: string;
   remark?: string;
+  isRecommend?: string;
+  isHot?: string;
 }
 
 // ========== 投递相关 ==========
@@ -279,6 +281,8 @@ export interface JobQuery {
   companyId?: number;
   status?: string;
   jobType?: string;
+  isRecommend?: string;
+  isHot?: string;
 }
 
 export interface ApplyQuery {
@@ -450,6 +454,10 @@ export function changeJobStatus(data: { jobId: number; status: string }) {
 
 export function delJob(jobId: number | number[]) {
   return request.delete(`${baseUrl}/job/${jobId}`);
+}
+
+export function updateJob(data: any) {
+  return request.put(`${baseUrl}/job`, data);
 }
 
 export function getJobStatistics() {
